@@ -1,0 +1,69 @@
+name: 당근마켓 수동 검색기
+
+on:
+  workflow_dispatch:
+    inputs:
+      keyword:
+        description: '검색 키워드 (예: 아이패드, 캠핑의자)'
+        required: true
+        default: '아이폰'
+        type: string
+      city:
+        description: '지역 선택'
+        required: true
+        default: '서울특별시'
+        type: choice
+        options:
+          - 전국
+          - 서울특별시
+          - 부산광역시
+          - 대구광역시
+          - 인천광역시
+          - 광주광역시
+          - 대전광역시
+          - 울산광역시
+          - 세종특별자치시
+          - 경기도
+          - 강원특별자치도
+          - 충청북도
+          - 충청남도
+          - 전북특별자치도
+          - 전라남도
+          - 경상북도
+          - 경상남도
+          - 제주특별자치도
+
+jobs:
+  run-bot:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: 코드 가져오기
+        uses: actions/checkout@v4
+
+      - name: 파이썬 설치
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: 크롬 설치
+        uses: browser-actions/setup-chrome@latest
+
+      - name: 라이브러리 설치
+        run: pip install selenium requests
+
+      - name: 봇 실행
+        env:
+          TG_TOKEN: ${{ secrets.TG_TOKEN }}
+          TG_ID: ${{ secrets.TG_ID }}
+          SEARCH_KEYWORD: ${{ inputs.keyword }}
+          SEARCH_CITY: ${{ inputs.city }}
+        run: python bot.py
+
+      - name: 기록 저장
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "검색 기록 업데이트"
+          file_pattern: seen.txt
