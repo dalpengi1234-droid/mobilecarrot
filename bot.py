@@ -16,7 +16,7 @@ from selenium.webdriver.support import expected_conditions as EC
 # ==========================================
 # 👇 [설정] 속도 조절
 # ⚠️ 경고: 5개 이상으로 올리면 서버가 터질(OOM) 확률이 매우 높습니다.
-MAX_WORKERS = 4  
+MAX_WORKERS = 10  
 DEFAULT_KEYWORD = "풀카운트"
 DEFAULT_CITY = "서울특별시"
 # ==========================================
